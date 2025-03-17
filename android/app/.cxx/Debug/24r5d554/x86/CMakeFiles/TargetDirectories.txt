@@ -1,0 +1,2 @@
+C:/Users/deeep/StudioProjects/agromind/android/app/.cxx/Debug/24r5d554/x86/CMakeFiles/edit_cache.dir
+C:/Users/deeep/StudioProjects/agromind/android/app/.cxx/Debug/24r5d554/x86/CMakeFiles/rebuild_cache.dir

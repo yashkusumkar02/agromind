@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "679889018131",
+    "project_id": "aigarden-48af5",
+    "storage_bucket": "aigarden-48af5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679889018131:android:169e49fb55ac8a319acee6",
+        "android_client_info": {
+          "package_name": "com.example.agromind"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA__OdwRQzT4vIy_Vej7D36QlRiKO8zPeU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
