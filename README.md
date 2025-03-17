@@ -3,6 +3,9 @@
 ## 🌿 AI-Driven Plant Health Advisor
 AgroMind is an intelligent mobile application designed to help home gardeners monitor and maintain plant health using AI-powered diagnosis and personalized care recommendations. This app leverages **machine learning, image processing, and AI-driven insights** to detect plant diseases, provide treatment solutions, and guide users on optimal plant care.
 
+## 📷UI
+![AgroMind](https://github.com/user-attachments/assets/eb6f18ea-aede-41ae-ae4d-23886abd85e7)
+
 ## 🚀 Features
 ### 🔹 **User Authentication**
 - Firebase Authentication for secure login and registration.
