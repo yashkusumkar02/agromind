@@ -6,6 +6,9 @@ AgroMind is an intelligent mobile application designed to help home gardeners mo
 ## 📷UI
 ![AgroMind](https://github.com/user-attachments/assets/eb6f18ea-aede-41ae-ae4d-23886abd85e7)
 
+## Dataset🌱
+https://drive.google.com/drive/folders/17tSK5mw7favzf5oubc-MqNn5O7crFjtV?usp=sharing
+
 ## 🚀 Features
 ### 🔹 **User Authentication**
 - Firebase Authentication for secure login and registration.
