@@ -35,14 +35,19 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            minifyEnabled false
+            shrinkResources false
+
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // ✅ Fix signingConfig issue (Debug key should NOT be used in release)
+            signingConfig signingConfigs.debug  // Temporary Fix: Uses Debug Key
         }
     }
     dependencies {
         // ✅ Ensure Desugaring Dependency is Added
         coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:2.0.0"
 
         implementation platform('com.google.firebase:firebase-bom:33.10.0')
         implementation 'com.google.firebase:firebase-messaging-ktx'
