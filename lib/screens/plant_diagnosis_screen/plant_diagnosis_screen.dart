@@ -173,18 +173,37 @@ class PlantDiagnosisScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     "🌿 Plant: ${controller.plantName.value}",
-                                    style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green),
                                   ),
-                                  const SizedBox(height: 5), // ✅ Added spacing for readability
+                                  const SizedBox(height: 5),
+
                                   Text(
                                     "🦠 Disease: ${controller.diseaseName.value}",
-                                    style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red),
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red),
                                   ),
-                                  const SizedBox(height: 5), // ✅ Added spacing
 
-                                  // ✅ Auto-Resizing Recommendation Box
+                                  const SizedBox(height: 5),
+
+                                  // ✅ Show confidence
+                                  Text(
+                                    "📊 Confidence: ${(controller.predictionConfidence.value * 100).toStringAsFixed(1)}%",
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black87),
+                                  ),
+
+                                  const SizedBox(height: 10),
+
+                                  // ✅ Recommendation Box
                                   Container(
-                                    width: double.infinity, // ✅ Takes full width
+                                    width: double.infinity,
                                     padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -192,9 +211,10 @@ class PlantDiagnosisScreen extends StatelessWidget {
                                       border: Border.all(color: Colors.green, width: 1),
                                     ),
                                     child: Text(
-                                      "💡 Recommendation: ${controller.recommendation.value}",
+                                      "💡 Recommendation: ${controller.recommendation.value.isNotEmpty ? controller.recommendation.value : "No recommendation available."}",
                                       textAlign: TextAlign.center,
-                                      style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 14, color: Colors.black87),
                                     ),
                                   ),
                                 ],
@@ -211,10 +231,10 @@ class PlantDiagnosisScreen extends StatelessWidget {
                 // ✅ Continue Button (Fixed at Bottom)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
-                  child: ElevatedButton(
+                  child: Obx(() => ElevatedButton( // 🔥 Make it reactive
                     onPressed: () {
                       if (controller.selectedImagePath.isNotEmpty) {
-                        controller.analyzeImage(); // ✅ Run TFLite Model First
+                        controller.analyzeImage(); // ✅ Analyze or Reanalyze
                       } else {
                         Get.snackbar("Error", "Please upload or capture an image.");
                       }
@@ -227,10 +247,10 @@ class PlantDiagnosisScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 90, vertical: 12),
                     ),
                     child: Text(
-                      "Analyze",
+                      controller.isAnalyzed.value ? "Reanalyze" : "Analyze", // 🔥 Change text based on state
                       style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
                     ),
-                  ),
+                  )),
                 ),
               ],
             ),

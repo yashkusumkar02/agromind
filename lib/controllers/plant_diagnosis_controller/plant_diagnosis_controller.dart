@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
@@ -14,7 +15,8 @@ class PlantDiagnosisController extends GetxController {
   RxString plantName = ''.obs;
   RxString diseaseName = ''.obs;
   RxString recommendation = ''.obs;
-  RxBool isAnalyzed = false.obs; // ✅ Added flag to check if analyzed or not
+  RxBool isAnalyzed = false.obs;
+  RxDouble predictionConfidence = 0.0.obs; // ✅ Track confidence
 
   late Interpreter interpreter;
   List<String> labels = [];
@@ -47,25 +49,22 @@ class PlantDiagnosisController extends GetxController {
     }
   }
 
-  // 📌 Pick Image from Gallery (No Auto Analysis)
   Future<void> pickImageFromGallery() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       selectedImagePath.value = pickedFile.path;
-      isAnalyzed.value = false; // ✅ Reset flag to false after picking
+      isAnalyzed.value = false;
     }
   }
 
-  // 📌 Capture Image from Camera (No Auto Analysis)
   Future<void> captureImageFromCamera() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       selectedImagePath.value = pickedFile.path;
-      isAnalyzed.value = false; // ✅ Reset flag to false after picking
+      isAnalyzed.value = false;
     }
   }
 
-  // ✅ User Clicks Analyze Button to Process Image
   Future<void> analyzeImage() async {
     if (selectedImagePath.value.isEmpty) {
       Get.snackbar("Error", "Please upload or capture an image.");
@@ -79,17 +78,38 @@ class PlantDiagnosisController extends GetxController {
 
       interpreter.run(input, output);
 
-      int predictedIndex = output[0].indexOf(output[0].reduce((double a, double b) => a > b ? a : b));
+      List<double> prediction = output[0].cast<double>();
+      int predictedIndex = prediction.indexOf(
+          prediction.reduce((double a, double b) => a > b ? a : b)
+      );
+      double confidence = prediction[predictedIndex];
+      predictionConfidence.value = confidence; // ✅ Save for UI if needed
+
+      if (confidence < 0.6) {
+        plantName.value = "";
+        diseaseName.value = "";
+        recommendation.value = "";
+        isAnalyzed.value = false;
+
+        Get.snackbar(
+          "Unrecognized Plant",
+          "Image confidence is too low (${(confidence * 100).toStringAsFixed(1)}%). Please try again with a clearer image of a plant leaf.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
       plantName.value = labels[predictedIndex];
       diseaseName.value = labels[predictedIndex];
 
-      print("✅ Prediction: ${plantName.value}");
+      print("✅ Prediction: ${plantName.value} with ${(confidence * 100).toStringAsFixed(2)}% confidence");
 
       await getRecommendationFromGemini(diseaseName.value);
-
       await savePredictionToFirestore();
 
-      isAnalyzed.value = true; // ✅ Set flag to true after analyzing
+      isAnalyzed.value = true;
     } catch (e) {
       print("❌ Failed to analyze the image: $e");
       Get.snackbar("Error", "Failed to analyze the image.");
@@ -159,9 +179,7 @@ class PlantDiagnosisController extends GetxController {
 
   Future<void> savePredictionToFirestore() async {
     try {
-      User? user = FirebaseAuth.instance
-          .currentUser; // ✅ Get the logged-in user
-
+      User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         print("❌ User not authenticated");
         return;
@@ -169,9 +187,8 @@ class PlantDiagnosisController extends GetxController {
 
       await firestore
           .collection("users")
-          .doc(user.uid) // ✅ Store under the user's UID
-          .collection(
-          "plant_diagnosis") // ✅ Create sub-collection for plant diagnosis
+          .doc(user.uid)
+          .collection("plant_diagnosis")
           .add({
         "imagePath": selectedImagePath.value,
         "plantName": plantName.value,
