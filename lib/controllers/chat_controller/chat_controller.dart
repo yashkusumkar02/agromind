@@ -9,7 +9,7 @@ class ChatController extends GetxController {
 
   final GenerativeModel model = GenerativeModel(
     model: "gemini-2.0-flash",
-    apiKey: "AIzaSyARVNQK2J9ohWgp5K7kioSRmrfeJJsKugI", // 🔥 Replace with secure API storage
+    apiKey: "AIzaSyDx9GcqmJzNhfEojVY00pyO7N3-ziGD4qM", // 🔥 Replace with secure API storage
   );
 
   @override

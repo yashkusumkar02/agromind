@@ -22,7 +22,7 @@ class PlantDiagnosisController extends GetxController {
   List<String> labels = [];
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final String apiKey = "AIzaSyAYTg-RgwvuKcGc0b9GxI20RMcNgaUK85E"; // Replace with actual API key
+  final String apiKey = "AIzaSyDx9GcqmJzNhfEojVY00pyO7N3-ziGD4qM"; // Replace with actual API key
 
   @override
   void onInit() {

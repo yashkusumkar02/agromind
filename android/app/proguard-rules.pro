@@ -1,0 +1,3 @@
+-keep class io.flutter.** { *; }
+-keep class com.example.agromind.** { *; }
+-dontwarn io.flutter.**
